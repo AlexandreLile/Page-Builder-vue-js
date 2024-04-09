@@ -8,7 +8,7 @@
         backgroundImage: 'url(' + imageURL + ')',
       }"
     >
-      <div class="content_text">
+      <div class="content_text" :style="{ paddingTop: paddingTop + 'px' }">
         <h2
           :class="backgroundClass"
           :style="{ color: titleColor, fontSize: titleFontSize + 'rem' }"
@@ -19,7 +19,7 @@
         >
           {{ title }}
         </h2>
-        <h3
+        <!-- <h3
           :style="{ color: subTitleColor }"
           contenteditable="true"
           @blur="updateSubtitle('updateSubtitle', $event)"
@@ -27,7 +27,7 @@
           ref="editableSubtitle"
         >
           {{ subTitle }}
-        </h3>
+        </h3> -->
         <p>
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque quas
           iste assumenda error libero veritatis sapiente culpa id iusto autem.
@@ -67,9 +67,13 @@
               <input id="title" type="text" v-model="title" />
             </div>
 
-            <div class="container_edit_modal_flex">
+            <!-- <div class="container_edit_modal_flex">
               <p>Sous Titre</p>
               <input id="title" type="text" v-model="subTitle" />
+            </div> -->
+            <div class="container_edit_modal_flex">
+              <p>Padding top</p>
+              <input type="number" id="" v-model="paddingTop" />
             </div>
             <div class="container_edit_modal_flex">
               <p>Couleur du Titre</p>
@@ -102,7 +106,8 @@ export default {
     return {
       isUpdateModalOpen: false,
       title: "",
-      subTitle: "",
+      paddingTop: "",
+      // subTitle: "",
     };
   },
 
@@ -122,7 +127,7 @@ export default {
     },
 
     loadLocalStorage() {
-      const properties = ["title", "subTitle"];
+      const properties = ["title", "paddingTop"];
 
       properties.forEach((property) => {
         const savedValue = localStorage.getItem(`${this.id}-${property}`);
@@ -149,7 +154,8 @@ export default {
       // et les valeurs étant celles actuelles à sauvegarder.
       const propertiesToSave = {
         title: this.title,
-        subTitle: this.subTitle,
+        paddingTop: this.paddingTop,
+        // subTitle: this.subTitle,
       };
 
       // Itérez sur l'objet et sauvegardez chaque propriété.
@@ -184,6 +190,6 @@ export default {
   align-items: center;
   flex-direction: column;
   text-align: center;
-  gap: 15px;
+  gap: 10px;
 }
 </style>
