@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 // Plugin pour sauvegarder l'état dans localStorage
 const localStoragePlugin = (store) => {
@@ -23,9 +24,14 @@ export default createStore({
   },
   mutations: {
     ADD_COMPONENT(state, component) {
+      if (!component.type) {
+        console.error("Tentative d'ajout d'un composant sans type.", component);
+        return; // Ne pas ajouter le composant s'il manque un type.
+      }
+
       const newComponent = {
         id: uuidv4(),
-        type: component.type,
+        type: component.type, // Assurez-vous que le 'type' est bien fourni
         ...component.props,
       };
       state.componentsList.push(newComponent);
@@ -34,7 +40,6 @@ export default createStore({
       state.componentsList = newList;
     },
     DELETE_COMPONENT(state, componentId) {
-      // Suppression d'un composant basé sur son ID
       state.componentsList = state.componentsList.filter(
         (component) => component.id !== componentId
       );
@@ -42,7 +47,6 @@ export default createStore({
     UPDATE_COMPONENT(state, { id, newProps }) {
       const componentIndex = state.componentsList.findIndex((c) => c.id === id);
       if (componentIndex !== -1) {
-        // Mise à jour des props du composant sélectionné avec les nouvelles propriétés
         state.componentsList[componentIndex] = {
           ...state.componentsList[componentIndex],
           ...newProps,
@@ -59,6 +63,17 @@ export default createStore({
     },
     updateComponent({ commit }, { id, newProps }) {
       commit("UPDATE_COMPONENT", { id, newProps });
+    },
+    async sendComponentsListToServer({ state }) {
+      try {
+        const response = await axios.post("http://localhost:3000/Page", {
+          name: "Test",
+          components: state.componentsList,
+        });
+        console.log("Réponse du serveur :", response.data);
+      } catch (error) {
+        console.error("Erreur lors de l’envoi des données au serveur:", error);
+      }
     },
   },
   plugins: [localStoragePlugin],

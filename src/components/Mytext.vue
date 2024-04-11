@@ -102,6 +102,7 @@ export default {
       required: true,
     },
   },
+
   data() {
     return {
       isUpdateModalOpen: false,
@@ -161,6 +162,11 @@ export default {
       // Itérez sur l'objet et sauvegardez chaque propriété.
       Object.entries(propertiesToSave).forEach(([key, value]) => {
         this.saveToLocalStorage(key, value);
+      });
+
+      this.$store.dispatch("updateComponent", {
+        id: this.id,
+        newProps: propertiesToSave,
       });
 
       this.closeUpdateModal();
